@@ -9,15 +9,15 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    public UserAuthorityService userService;
+    public UserAuthorityService userAuthorityService;
 
     public UserController(UserAuthorityService userService){
-        this.userService = userService;
+        this.userAuthorityService = userService;
     }
 
     @GetMapping("/authorities")
     public List<String> getAuthorities(){
-        return userService.getAuthorities();
+        return userAuthorityService.getAuthorities();
     }
 
     @GetMapping("/adminPanel")
