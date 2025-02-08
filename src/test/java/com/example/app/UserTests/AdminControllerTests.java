@@ -2,11 +2,9 @@ package com.example.app.UserTests;
 
 import com.example.app.SecurityOverviewApplication;
 import com.example.app.UserEntity.User;
-import com.example.app.UserEntity.UserAuthorityService;
 import com.example.app.UserEntity.UserRepository;
 import com.example.app.config.SecurityConfig;
 import com.example.app.web.AdminController;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
