@@ -20,11 +20,6 @@ public class UserController {
         return userAuthorityService.getAuthorities();
     }
 
-    @GetMapping("/adminPanel")
-    public String showOnlyForAdmin(){
-        return "Hello Admin";
-    }
-
     @GetMapping("/")
     public String showString(){
         return "Spring Security Overview";

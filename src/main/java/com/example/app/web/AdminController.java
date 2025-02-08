@@ -2,11 +2,7 @@ package com.example.app.web;
 
 import com.example.app.UserEntity.User;
 import com.example.app.UserEntity.UserRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,17 +16,42 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/adminPanel")
+    public String showOnlyForAdmin(){
+        return "Hello Admin";
+    }
     @GetMapping("/users")
     public List<User> showUsers(){
         return userRepository.findAll();
     }
 
-    @PostMapping("/user/{id}")
-    public void changeToPremium(@PathVariable Long id){
+    @GetMapping("/user/{id}")
+    public User showUserById(@PathVariable Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.orElseGet(User::new);
+    }
+
+    @PostMapping("/user/to_regular/{id}")
+    public String changeToRegular(@PathVariable Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            user.setRole("USER");
+            userRepository.save(user);
+            return "User: " + user.getUsername() + " has a role: " + user.getRole();
+        }
+        return "No user with the specified ID.";
+    }
+
+    @PostMapping("/user/to_premium/{id}")
+    public String changeToPremium(@PathVariable Long id){
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()){
             User user = optionalUser.get();
             user.setRole("PREMIUM_USER");
+            userRepository.save(user);
+            return "User: " + user.getUsername() + " has a role: " + user.getRole();
         }
+        return "No user with the specified ID.";
     }
 }

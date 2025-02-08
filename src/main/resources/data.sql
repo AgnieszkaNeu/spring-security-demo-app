@@ -1,0 +1,2 @@
+INSERT INTO app_user (id, username,password,role) VALUES (1, 'admin','$2a$12$SkHdYS5Ly0Q1I9Jm8AA8CuLxJvxzI8CHPUYU6C3ssxV7HH17jRNda','ADMIN');
+INSERT INTO app_user (id, username,password,role) VALUES (2, 'user','$2a$12$SkHdYS5Ly0Q1I9Jm8AA8CuLxJvxzI8CHPUYU6C3ssxV7HH17jRNda','USER');
