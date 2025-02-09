@@ -13,9 +13,9 @@ import java.util.Optional;
 public class CustomUserDetailService implements UserDetailsService {
 
     UserRepository userRepository;
-    UserService userService;
+    UserManagementService userService;
 
-    public CustomUserDetailService(UserRepository userRepository,UserService userService){
+    public CustomUserDetailService(UserRepository userRepository, UserManagementService userService){
         this.userRepository = userRepository;
         this.userService = userService;
     }

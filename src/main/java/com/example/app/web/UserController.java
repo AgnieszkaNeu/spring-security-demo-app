@@ -1,6 +1,6 @@
 package com.example.app.web;
 
-import com.example.app.UserEntity.UserAuthorityService;
+import com.example.app.UserEntity.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,15 +9,15 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    public UserAuthorityService userAuthorityService;
+    public UserService userService;
 
-    public UserController(UserAuthorityService userService){
-        this.userAuthorityService = userService;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping("/authorities")
     public List<String> getAuthorities(){
-        return userAuthorityService.getAuthorities();
+        return userService.getAuthorities();
     }
 
     @GetMapping("/")

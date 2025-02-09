@@ -1,8 +1,8 @@
 package com.example.app.UserTests;
 
 import com.example.app.SecurityOverviewApplication;
-import com.example.app.UserEntity.User;
-import com.example.app.UserEntity.UserRepository;
+import com.example.app.UserEntity.UserDto;
+import com.example.app.UserEntity.UserService;
 import com.example.app.config.SecurityConfig;
 import com.example.app.web.AdminController;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(AdminController.class)
 @ContextConfiguration(classes = {SecurityConfig.class, SecurityOverviewApplication.class, AdminControllerTests.TestSecurityConfig.class})
@@ -35,11 +32,10 @@ public class AdminControllerTests {
     MockMvc mockMvc;
 
     @MockitoBean
-    UserRepository userRepository;
+    UserService userService;
 
-    User user_1 = new User(1L,"user_1","password","USER");
-
-    User user_2 = new User(2L,"user_2","password","USER");
+    UserDto userDto_1 = new UserDto("user_1", "USER");
+    UserDto userDto_2 = new UserDto("user_2", "USER");
 
     @TestConfiguration
     public static class TestSecurityConfig {
@@ -67,17 +63,15 @@ public class AdminControllerTests {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void showUsers() throws Exception {
-        given(userRepository.findAll()).willReturn(List.of(user_1,user_2));
+        given(userService.showUsers()).willReturn(List.of(userDto_1,userDto_2));
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].username").value("user_1"))
-                .andExpect(jsonPath("$[0].password").value("password"))
                 .andExpect(jsonPath("$[0].role").value("USER"))
                 .andExpect(jsonPath("$[1].username").value("user_2"))
-                .andExpect(jsonPath("$[1].password").value("password"))
                 .andExpect(jsonPath("$[1].role").value("USER"));
     }
 
@@ -85,40 +79,18 @@ public class AdminControllerTests {
     @WithMockUser(roles = {"ADMIN"})
     public void showUserById() throws Exception {
 
-        given(userRepository.findById(user_1.getId())).willReturn(Optional.of(user_1));
+        given(userService.showUserById(1L)).willReturn(userDto_1);
+        given(userService.showUserById(3L)).willReturn(new UserDto(null,"USER"));
 
-        mockMvc.perform(get("/user/" + user_1.getId()))
+        mockMvc.perform(get("/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.username").value(user_1.getUsername()))
-                .andExpect(jsonPath("$.password").value(user_2.getPassword()));
+                .andExpect(jsonPath("$.username").value(userDto_1.username()))
+                .andExpect(jsonPath("$.role").value(userDto_1.role()));
 
         mockMvc.perform(get("/user/" + 3L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.username").doesNotExist())
-                .andExpect(jsonPath("$.password").doesNotExist());
-    }
-
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    public void changeToRegular() throws Exception {
-
-        given(userRepository.findById(user_1.getId())).willReturn(Optional.of(user_1));
-
-        mockMvc.perform(post("/user/to_regular/" + user_1.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("User: user_1 has a role: USER"));
-    }
-
-    @Test
-    @WithMockUser(roles = {"ADMIN"})
-    public void changeToPremium() throws Exception {
-
-        given(userRepository.findById(user_1.getId())).willReturn(Optional.of(user_1));
-
-        mockMvc.perform(post("/user/to_premium/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("User: user_1 has a role: PREMIUM_USER"));
+                .andExpect(jsonPath("$.username").doesNotExist());
     }
 }

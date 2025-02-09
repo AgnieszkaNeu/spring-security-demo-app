@@ -1,6 +1,6 @@
 package com.example.app.UserTests;
 
-import com.example.app.UserEntity.UserAuthorityService;
+import com.example.app.UserEntity.UserService;
 import com.example.app.web.UserController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +24,7 @@ public class UserControllerTests {
     MockMvc mockMvc;
 
     @MockitoBean
-    UserAuthorityService userAuthorityService;
+    UserService userAuthorityService;
 
     @Test
     @WithMockUser(roles = {"USER","ADMIN"})
