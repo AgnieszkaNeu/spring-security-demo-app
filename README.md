@@ -24,8 +24,8 @@ Before running, make sure you have it installed:
 
 1. **Clone repository**
    ```sh
-   git clone https://github.com/user/repo.git
-   cd repo
+   git clone https://github.com/AgnieszkaNeu/spring-security-demo-app.git
+   cd spring-security-demo-app
    ```
 2. **Build app**
    ```sh
